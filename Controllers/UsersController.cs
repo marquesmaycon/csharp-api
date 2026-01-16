@@ -1,33 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CSharpApi.Context;
 using CSharpApi.Models;
 using CSharpApi.Models.DTOs;
+using CSharpApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSharpApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController(DatabaseContext context) : ControllerBase
+    public class UsersController(UserService userService) : ControllerBase
     {
 
-        private readonly DatabaseContext _context = context;
-
         [HttpGet]
-        public ActionResult<List<User>> Index()
+        public async Task<ActionResult<List<User>>> Index()
         {
-            var users = _context.Users.ToList();
+            var users = await userService.GetAllUsers();
 
             return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<User> Get(int id)
+        public async Task<ActionResult<User>> Get(int id)
         {
-            var user = _context.Users.Find(id);
+            var user = await userService.GetUserById(id);
             if (user == null) return NotFound();
 
             return Ok(user);
@@ -36,57 +30,38 @@ namespace CSharpApi.Controllers
 
 
         [HttpGet("name/{name}")]
-        public ActionResult<List<User>> GetByName(string name)
+        public async Task<ActionResult<List<User>>> GetByName(string name)
         {
-            var users = _context.Users
-                .Where(u => u.Name.ToLower().Contains(name.ToLower()))
-                .ToList();
+            var users = await userService.GetUsersByName(name);
 
             return Ok(users);
         }
 
         [HttpPost]
-        public ActionResult Create(CreateUserDto user)
+        public async Task<ActionResult<UserResponseDto>> Create(CreateUserDto user)
         {
-            var newUser = new User
-            {
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password
-            };
+            var newUser = await userService.CreateUser(user);
 
-            _context.Users.Add(newUser);
-            _context.SaveChanges();
-
-            return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+            return Ok(newUser);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, UpdateUserDto updatedUser)
+        public async Task<ActionResult> Update(int id, UpdateUserDto updatedUser)
         {
-            var user = _context.Users.Find(id);
+            var user = await userService.UpdateUser(id, updatedUser);
             if (user == null)
             {
                 return NotFound();
             }
 
-            user.Name = updatedUser.Name;
-            user.Email = updatedUser.Email;
-
-            _context.Users.Update(user);
-            _context.SaveChanges();
-
             return Ok(user);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var user = _context.Users.Find(id);
-            if (user == null) return NotFound();
-
-            _context.Users.Remove(user);
-            _context.SaveChanges();
+            var deleted = await userService.DeleteUser(id);
+            if (!deleted) return NotFound();
 
             return NoContent();
         }
