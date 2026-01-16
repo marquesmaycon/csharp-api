@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSharpApi.Context;
 using CSharpApi.Models;
+using CSharpApi.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSharpApi.Controllers
@@ -45,16 +46,23 @@ namespace CSharpApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(User user)
+        public ActionResult Create(CreateUserDto user)
         {
-            _context.Users.Add(user);
+            var newUser = new User
+            {
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password
+            };
+
+            _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            return Ok(user);
+            return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, User updatedUser)
+        public ActionResult Update(int id, UpdateUserDto updatedUser)
         {
             var user = _context.Users.Find(id);
             if (user == null)
@@ -64,7 +72,6 @@ namespace CSharpApi.Controllers
 
             user.Name = updatedUser.Name;
             user.Email = updatedUser.Email;
-            user.Password = updatedUser.Password;
 
             _context.Users.Update(user);
             _context.SaveChanges();
