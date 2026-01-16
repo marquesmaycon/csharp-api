@@ -1,3 +1,4 @@
+using CSharpApi.Constants;
 using CSharpApi.Models;
 using CSharpApi.Models.DTOs;
 using CSharpApi.Services;
@@ -20,6 +21,7 @@ namespace CSharpApi.Controllers
             return Ok(users);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> Get(int id)
         {
@@ -30,7 +32,7 @@ namespace CSharpApi.Controllers
         }
 
 
-
+        [Authorize]
         [HttpGet("name/{name}")]
         public async Task<ActionResult<List<User>>> GetByName(string name)
         {
@@ -39,6 +41,7 @@ namespace CSharpApi.Controllers
             return Ok(users);
         }
 
+        [Authorize(Roles = RoleConstants.Admin)]
         [HttpPost]
         public async Task<ActionResult<UserResponseDto>> Create(CreateUserDto user)
         {
@@ -47,6 +50,7 @@ namespace CSharpApi.Controllers
             return Ok(newUser);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdateUserDto updatedUser)
         {

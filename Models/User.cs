@@ -1,3 +1,5 @@
+using CSharpApi.Constants;
+
 namespace CSharpApi.Models
 {
     public class User
@@ -9,6 +11,8 @@ namespace CSharpApi.Models
         public required string Email { get; set; }
 
         public required string Password { get; set; }
+
+        public string Role { get; set; } = RoleConstants.User;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

@@ -10,5 +10,7 @@ namespace CSharpApi.Models.DTOs
         [Required]
         [EmailAddress(ErrorMessage = "Email inválido")]
         public required string Email { get; set; } = string.Empty;
+
+        public string? Role { get; set; }
     }
 }

@@ -8,6 +8,23 @@ namespace CSharpApi.Services
 {
     public class UserService(DatabaseContext context)
     {
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await context.Users.ToListAsync();
+        }
+
+        public async Task<User?> GetUserById(int id)
+        {
+            return await context.Users.FindAsync(id);
+        }
+
+        public async Task<List<User>> GetUsersByName(string name)
+        {
+            return await context.Users
+                .Where(u => u.Name.ToLower().Contains(name.ToLower()))
+                .ToListAsync();
+        }
+
         public async Task<UserResponseDto> CreateUser(CreateUserDto userDto)
         {
             var existingUser = await context.Users.FirstOrDefaultAsync(u => u.Email == userDto.Email.ToLower());
@@ -36,23 +53,6 @@ namespace CSharpApi.Services
             };
         }
 
-        public async Task<List<User>> GetAllUsers()
-        {
-            return await context.Users.ToListAsync();
-        }
-
-        public async Task<User?> GetUserById(int id)
-        {
-            return await context.Users.FindAsync(id);
-        }
-
-        public async Task<List<User>> GetUsersByName(string name)
-        {
-            return await context.Users
-                .Where(u => u.Name.ToLower().Contains(name.ToLower()))
-                .ToListAsync();
-        }
-
         public async Task<User?> UpdateUser(int id, UpdateUserDto updatedUser)
         {
             var user = await context.Users.FindAsync(id);
@@ -63,6 +63,11 @@ namespace CSharpApi.Services
 
             user.Name = updatedUser.Name;
             user.Email = updatedUser.Email;
+
+            if (!string.IsNullOrEmpty(updatedUser.Role))
+            {
+                user.Role = updatedUser.Role;
+            }
 
             context.Users.Update(user);
             await context.SaveChangesAsync();
