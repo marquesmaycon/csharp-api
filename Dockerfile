@@ -1,0 +1,28 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+
+WORKDIR /app
+
+# Copiar arquivos de projeto
+COPY ["CSharpApi.csproj", "./"]
+
+# Restaurar dependências
+RUN dotnet restore "CSharpApi.csproj"
+
+# Copiar código
+COPY . .
+
+# Build
+RUN dotnet build "CSharpApi.csproj" -c Release -o /app/build
+
+# Publish
+RUN dotnet publish "CSharpApi.csproj" -c Release -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+
+WORKDIR /app
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "CSharpApi.dll"]
