@@ -63,6 +63,7 @@ namespace CSharpApi.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CSharpApi.Services
 {
-    public class UserService(DatabaseContext context)
+    public class UserService(DatabaseContext context, CurrentUserService currentUserService)
     {
+
         public async Task<List<User>> GetAllUsers()
         {
             return await context.Users.ToListAsync();
@@ -55,10 +56,18 @@ namespace CSharpApi.Services
 
         public async Task<User?> UpdateUser(int id, UpdateUserDto updatedUser)
         {
+            var isAdmin = currentUserService.IsAdmin;
+            var loggedUserId = currentUserService.UserId;
+
             var user = await context.Users.FindAsync(id);
             if (user == null)
             {
                 return null;
+            }
+
+            if (!isAdmin && user.Id != loggedUserId)
+            {
+                throw new UnauthorizedAccessException("Você não tem permissão para atualizar este usuário.");
             }
 
             user.Name = updatedUser.Name;
@@ -66,6 +75,10 @@ namespace CSharpApi.Services
 
             if (!string.IsNullOrEmpty(updatedUser.Role))
             {
+                if (!isAdmin && user.Role != updatedUser.Role)
+                {
+                    throw new UnauthorizedAccessException("Apenas administradores podem alterar roles.");
+                }
                 user.Role = updatedUser.Role;
             }
 
@@ -77,10 +90,18 @@ namespace CSharpApi.Services
 
         public async Task<bool> DeleteUser(int id)
         {
+            var isAdmin = currentUserService.IsAdmin;
+            var loggedUserId = currentUserService.UserId;
+
             var user = await context.Users.FindAsync(id);
             if (user == null)
             {
                 return false;
+            }
+
+            if (!isAdmin && user.Id != loggedUserId)
+            {
+                throw new UnauthorizedAccessException("Você não tem permissão para deletar este usuário.");
             }
 
             context.Users.Remove(user);

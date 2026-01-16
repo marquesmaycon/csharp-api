@@ -23,7 +23,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
     };
 });
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<CurrentUserService>();
 builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddControllers();
@@ -38,6 +40,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
