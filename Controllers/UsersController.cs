@@ -1,6 +1,7 @@
 using CSharpApi.Models;
 using CSharpApi.Models.DTOs;
 using CSharpApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSharpApi.Controllers
@@ -10,6 +11,7 @@ namespace CSharpApi.Controllers
     public class UsersController(UserService userService) : ControllerBase
     {
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<User>>> Index()
         {
