@@ -3,6 +3,7 @@ using CSharpApi.Context;
 using CSharpApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,12 +24,46 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
     };
 });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "CSharpApi",
+        Version = "v1",
+        Description = "API de gerenciamento de usuários com autenticação JWT"
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Insira o token JWT no formato: Bearer {seu token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CurrentUserService>();
 builder.Services.AddScoped<AuthService>();
 
-// HttpClient para JSONPlaceholder API
 builder.Services.AddHttpClient<JsonPlaceholderService>(client =>
 {
     client.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/");
@@ -37,13 +72,17 @@ builder.Services.AddHttpClient<JsonPlaceholderService>(client =>
 });
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.DocumentTitle = "CSharpApi API Documentation";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "CSharpApi v1");
+    });
 }
 
 app.UseHttpsRedirection();
