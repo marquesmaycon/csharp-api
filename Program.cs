@@ -28,6 +28,14 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<CurrentUserService>();
 builder.Services.AddScoped<AuthService>();
 
+// HttpClient para JSONPlaceholder API
+builder.Services.AddHttpClient<JsonPlaceholderService>(client =>
+{
+    client.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
