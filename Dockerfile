@@ -26,10 +26,6 @@ RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/ap
 
 COPY --from=build /app/publish .
 
-# Copiar script de entrypoint
-COPY entrypoint.sh ./
-RUN chmod +x ./entrypoint.sh
-
 EXPOSE 8080
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["dotnet", "CSharpApi.dll"]
