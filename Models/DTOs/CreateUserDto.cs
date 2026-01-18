@@ -14,5 +14,7 @@ namespace CSharpApi.Models.DTOs
 
         [MinLength(6, ErrorMessage = "Senha deve ter no mínimo 6 caracteres")]
         public required string Password { get; set; } = string.Empty;
+
+        public string? Role { get; set; }
     }
 }
