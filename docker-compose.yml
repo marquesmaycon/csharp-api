@@ -28,6 +28,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
+      - AppSettings__Token=${AppSettings__Token}
+      - AppSettings__Issuer=${AppSettings__Issuer}
+      - AppSettings__Audience=${AppSettings__Audience}
     ports:
        - "8080:8080"
     depends_on:

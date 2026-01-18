@@ -17,41 +17,25 @@ API RESTful de gerenciamento de usuários construída com .NET 9.0, utilizando P
    cd csharp-api
    ```
 
-2. **Configure os User Secrets:**
-   
-   Primeiro, inicialize o user-secrets no projeto:
-   ```bash
-   dotnet user-secrets init
-   ```
-
-   Execute os seguintes comandos para configurar as secrets da aplicação:
-
-   ```bash
-   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;Port=5432;Database=csharpapi_db;User Id=postgres;Password=password123;"
-   dotnet user-secrets set "AppSettings:Token" "5d6f0aa47ec2c0195214ce5c2a8f4f7d8779c162584c3c05ee490877e2682079f6e2b511126c5b1a87fcbcf81eef7a1773d561d4f7f73fe41c37b86bf0b3ab0f"
-   dotnet user-secrets set "AppSettings:Issuer" "https://localhost:7000"
-   dotnet user-secrets set "AppSettings:Audience" "https://localhost:7000"
-   ```
-
-   Para verificar se as secrets foram configuradas corretamente:
-   ```bash
-   dotnet user-secrets list
-   ```
-
-3. **Crie o arquivo `.env` na raiz do projeto:**
+2. **Crie o arquivo `.env` na raiz do projeto:**
    ```env
    POSTGRES_USER=postgres
    POSTGRES_PASSWORD=password123
    POSTGRES_DB=csharpapi_db
    ASPNETCORE_ENVIRONMENT=Development
+
+   AppSettings__Token=5d6f0aa47ec2c0195214ce5c2a8f4f7d8779c162584c3c05ee490877e2682079f6e2b511126c5b1a87fcbcf81eef7a1773d561d4f7f73fe41c37b86bf0b3ab0f
+   AppSettings__Issuer=https://csharpapi.example.com/auth
+   AppSettings__Audience=https://csharpapi.example.com/api
+   ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=csharpapi_db;User Id=postgres;Password=password123;
    ```
 
-4. **Inicie os containers:**
+3. **Inicie os containers:**
    ```bash
    docker-compose up -d
    ```
 
-5. **Restaure as dependências:**
+4. **Restaure as dependências:**
    ```bash
    dotnet restore
    ```
@@ -61,16 +45,16 @@ API RESTful de gerenciamento de usuários construída com .NET 9.0, utilizando P
    dotnet tool install --global dotnet-ef
    ```
 
-6. **Execute as migrations para criar as tabelas no banco de dados:**
+5. **Execute as migrations para criar as tabelas no banco de dados:**
    ```bash
    dotnet ef database update
    ```
 
-7. **Acesse a aplicação:**
+6. **Acesse a aplicação:**
    - API: http://localhost:8080
    - Swagger: http://localhost:8080/swagger
 
-8. **Para parar os containers/aplicação:**
+7. **Para parar os containers/aplicação:**
    ```bash
    docker-compose down
    ```
