@@ -44,7 +44,7 @@ API RESTful de gerenciamento de usuários construída com .NET 9.0, utilizando P
    - ✅ A aplicação estará pronta em ~30 segundos
 
 4. **Acesse a aplicação:**
-   - API: http://localhost:8080
+   - API: http://localhost:8080/api
    - Swagger: http://localhost:8080/swagger
 
 5. **Ver logs da aplicação:**
