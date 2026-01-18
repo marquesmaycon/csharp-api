@@ -66,16 +66,11 @@ API RESTful de gerenciamento de usuários construída com .NET 9.0, utilizando P
    dotnet ef database update
    ```
 
-7. **Execute a aplicação:**
-   ```bash
-   dotnet run
-   ```
-
-8. **Acesse a aplicação:**
+7. **Acesse a aplicação:**
    - API: http://localhost:8080
    - Swagger: http://localhost:8080/swagger
 
-9. **Para parar os containers:**
+8. **Para parar os containers/aplicação:**
    ```bash
    docker-compose down
    ```
