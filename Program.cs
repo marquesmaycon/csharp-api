@@ -90,6 +90,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapGet("/", () => new { message = "CSharpApi - API de Gerenciamento de Usuários", version = "1.0", swagger = "/swagger" });
+
 app.MapControllers();
 
 app.Run();

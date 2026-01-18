@@ -21,8 +21,15 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0
 
 WORKDIR /app
 
+# Instalar ferramentas necessárias
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/publish .
+
+# Copiar script de entrypoint
+COPY entrypoint.sh ./
+RUN chmod +x ./entrypoint.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "CSharpApi.dll"]
+ENTRYPOINT ["./entrypoint.sh"]

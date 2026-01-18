@@ -9,7 +9,9 @@ API RESTful de gerenciamento de usuários construída com .NET 9.0, utilizando P
 
 ## 🚀 Executando o Sistema Localmente
 
-### Opção 1: Usando Docker (Recomendado)
+### Opção 1: Usando Docker (Recomendado) ⭐
+
+**A forma mais simples de rodar tudo!**
 
 1. **Clone o repositório:**
    ```bash
@@ -34,30 +36,33 @@ API RESTful de gerenciamento de usuários construída com .NET 9.0, utilizando P
    ```bash
    docker-compose up -d
    ```
+   
+   O Docker irá automaticamente:
+   - ✅ Criar e iniciar o container PostgreSQL
+   - ✅ Fazer build e iniciar o container da API
+   - ✅ Executar as migrations do banco de dados
+   - ✅ A aplicação estará pronta em ~30 segundos
 
-4. **Restaure as dependências:**
-   ```bash
-   dotnet restore
-   ```
-
-   *Se você não tiver o CLI do Entity Framework instalado:*
-   ```bash
-   dotnet tool install --global dotnet-ef
-   ```
-
-5. **Execute as migrations para criar as tabelas no banco de dados:**
-   ```bash
-   dotnet ef database update
-   ```
-
-6. **Acesse a aplicação:**
+4. **Acesse a aplicação:**
    - API: http://localhost:8080
    - Swagger: http://localhost:8080/swagger
 
-7. **Para parar os containers/aplicação:**
+5. **Ver logs da aplicação:**
+   ```bash
+   docker-compose logs -f api
+   ```
+
+6. **Para parar os containers:**
    ```bash
    docker-compose down
    ```
+
+7. **Para parar e remover volumes (limpar dados):**
+   ```bash
+   docker-compose down -v
+   ```
+
+---
 
 ## 📚 Testando os Endpoints via Swagger
 
